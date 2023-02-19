@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include <QMessageBox>
 #include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -22,10 +21,6 @@ void MainWindow::createListModelView()
     model = new CustomListModel;
     ui->listView->setModel( model );
 
-//    QStringList strList;
-//    strList << "monitor" << "mouse" << "keyboard" << "hard disk drive"
-//            << "graphic card" << "sound card" << "memory" << "motherboard";
-//    model->setStringList(strList);
 }
 
 void MainWindow::on_addTextButton_clicked()
@@ -35,11 +30,6 @@ void MainWindow::on_addTextButton_clicked()
 
 void MainWindow::GetEditText()
 {
-//    QMessageBox::information(
-//        this,
-//        tr("Application Name"),
-//        ui->sentenceEdit->toPlainText() );
-
     model->insertRow(model->rowCount());
     QModelIndex index = model->index(model->rowCount()-1);
     model->setData(index, ui->sentenceEdit->toPlainText());
