@@ -1,4 +1,5 @@
 #include "customlistmodel.h"
+#include <QDebug>
 
 CustomListModel::CustomListModel(QObject *parent):
     QStringListModel(parent){
@@ -56,17 +57,6 @@ bool CustomListModel::setData(const QModelIndex &index, const QVariant &value)
     return QStringListModel::setData(index, value);
 }
 
-void CustomListModel::save(){
-    QFile file("required_components.txt");
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-        return;
-
-    QTextStream out(&file);
-    out << "Required components:" << "\n";
-    foreach(QPersistentModelIndex index, checkedItems)
-        out << index.data().toString() << "\n";
-}
-
 void CustomListModel::import(QString filePath)
 {
     QFile inputFile( filePath );
@@ -97,6 +87,11 @@ void CustomListModel::import(QString filePath)
         {
             strList[index].remove(dotIndex, 1);
         }
+        int rIndex = strList[index].indexOf('\r');      //removing \r
+        if(rIndex >= strList[index].length() - 2)
+        {
+            strList[index].remove(rIndex, 1);
+        }
         if(strList[index].indexOf("    ") == 0)
         {
             strList[index].remove(0, 4);
@@ -113,3 +108,33 @@ void CustomListModel::import(QString filePath)
 
     inputFile.close();
 }
+
+void CustomListModel::exportToFile(QString filePath)
+{
+    QFile outFile( filePath );
+    QTextStream out( &outFile );
+    if( !outFile.open( QIODevice::WriteOnly ) )
+    {
+        return ;
+    }
+    QString sentence;
+    QString newLine = "";
+
+    for( int index = 0; index <  this->rowCount(); index++  )
+    {
+        sentence = this->data(this->index(index, 0), Qt::DisplayRole).toString();
+
+        if(index > 0)
+            newLine = "\r\n";
+        if( checkedItems.contains(this->index(index, 0)) )
+        {
+            out << newLine << "    " << sentence << ".";
+        }
+        else
+        {
+            out << " " << sentence << ".";
+        }
+    }
+    outFile.close();
+}
+

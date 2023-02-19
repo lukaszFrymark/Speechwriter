@@ -22,8 +22,8 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value,
                  int role);
     bool setData(const QModelIndex &index, const QVariant &value);
-    void save();
     void import(QString filePath);
+    void exportToFile(QString filePath);
 
     QSet<QPersistentModelIndex> checkedItems;
 };
