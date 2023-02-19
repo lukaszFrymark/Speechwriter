@@ -69,5 +69,47 @@ void CustomListModel::save(){
 
 void CustomListModel::import(QString filePath)
 {
+    QFile inputFile( filePath );
+    QTextStream in( &inputFile );
+    in.setCodec("UTF-8");
+    QStringList strList;
+    QStringList paragraphs;
+    QVector<int> checked;
+    if( !inputFile.open( QIODevice::ReadOnly ) )    //text read
+    {
+        return ;
+    }
 
+    QString fullText;
+    fullText.append(in.readAll());
+    paragraphs = fullText.split('\n');
+    for ( int index = 0; index <  paragraphs.length(); index++ )
+    {
+        strList += paragraphs[index].split(". ");
+    }
+
+    strList.removeAll(QString("")); // removing empty strings
+
+    for( int index = 0; index <  strList.length(); index++  )
+    {
+        int dotIndex = strList[index].indexOf('.');      //removing tailing .
+        if(dotIndex >= strList[index].length() - 2)
+        {
+            strList[index].remove(dotIndex, 1);
+        }
+        if(strList[index].indexOf("    ") == 0)
+        {
+            strList[index].remove(0, 4);
+            checked.append(index);
+        }
+    }
+
+    setStringList(strList);
+
+    for( int index = 0; index <  checked.length(); index++  )
+    {
+        setData(this->index(checked[index]), Qt::Checked, Qt::CheckStateRole);
+    }
+
+    inputFile.close();
 }
