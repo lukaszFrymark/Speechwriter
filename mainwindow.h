@@ -23,6 +23,8 @@ private slots:
 
     void on_importButton_clicked();
 
+    void on_exportButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     CustomListModel* model;

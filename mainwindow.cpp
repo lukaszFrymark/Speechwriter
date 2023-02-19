@@ -66,3 +66,10 @@ void MainWindow::on_importButton_clicked()
     }
 }
 
+void MainWindow::on_exportButton_clicked()
+{
+    QString fileName = QFileDialog::getSaveFileName( this, "Save file", "", ("Text files (*.txt)") );
+
+    model->exportToFile(fileName);
+}
+
